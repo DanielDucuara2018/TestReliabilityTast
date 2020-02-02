@@ -5,9 +5,12 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/iperf_client.sh" beforeDir="false" afterPath="$PROJECT_DIR$/iperf_client.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/iperf_client.txt" beforeDir="false" afterPath="$PROJECT_DIR$/iperf_client.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/iperf_server.sh" beforeDir="false" afterPath="$PROJECT_DIR$/iperf_server.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/iperf_server.txt" beforeDir="false" afterPath="$PROJECT_DIR$/iperf_server.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/parser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ping_client.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ping_client.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test.png" beforeDir="false" afterPath="$PROJECT_DIR$/test.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test2.png" beforeDir="false" afterPath="$PROJECT_DIR$/test2.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,5 +48,9 @@
       <screen x="0" y="27" width="1366" height="702" />
     </state>
     <state x="807" y="136" width="424" height="483" key="FileChooserDialogImpl/0.27.1366.702@0.27.1366.702" timestamp="1580565504855" />
+    <state x="333" y="27" width="690" height="701" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1580652246906">
+      <screen x="0" y="27" width="1366" height="702" />
+    </state>
+    <state x="333" y="27" width="690" height="701" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1366.702@0.27.1366.702" timestamp="1580652246906" />
   </component>
 </project>

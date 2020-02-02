@@ -9,9 +9,9 @@ def simulation(shell_file, opt):
     os.system(shell_file)
     output_file = opt.tool + "_" + opt.role + ".txt"
     if opt.tool == "iperf":
-        file_content = parse_iperf(output_file)
+        file_content = parse_iperf(output_file, opt)
         parser_bit_rate_iperf(file_content, opt)
-        if opt.role == "server":
+        if opt.role == "server" and opt.protocol == "udp":
             parser_error_iperf(file_content, opt)
     elif opt.tool == "ping":
         file_content = parse_ping(output_file)
@@ -26,7 +26,7 @@ def parse_ping(output_file):
         file_content = list(map(lambda x: x.split(r' '), file_content))
         file_content = [[y for y in x] for x in file_content if len(x) == 8]
 
-        print(file_content)
+        # print(file_content)
         return file_content
 
 
@@ -37,26 +37,31 @@ def parser_icmp_sequence_ping(file_content, opt):
 
     for x in file_content:
         sequence_number = int(x[4].split('=')[1]) - 1
-        print(sequence_number)
+        # print(sequence_number)
         sequence[sequence_number] = 1
 
     plotting_stem(sequence, len(sequence), labels, title)
 
 
-def parse_iperf(output_file):
+def parse_iperf(output_file, opt):
     with open(output_file) as f:
         file_content = f.read()
         print("Content")
         file_content = file_content.split('\n')[1::]
         file_content = list(map(lambda x: x.split(r' '), file_content))
         file_content = [[y for y in x if y != ''] for x in file_content]
+        n = 0
+        if opt.protocol == "udp":
+            n = 6
+        else:
+            n = 5
         file_content = [
-            [x[i] for i in range(0, len(x)) if len(x) >= 8 and x[i] != "out-of-order" and x[i] != "received"] for x in
-            file_content[6:]]  # 10 simulation time
-        file_content = [[x[i] for i in range(0, len(x)) if i > 5 and x[i] != "KBytes"] for x in file_content]
+            [x[i] for i in range(0, len(x)) if x[i] not in ["out-of-order", "received"]] for x in
+            file_content[n:] if len(x) >= 8]
+        file_content = [[x[i] for i in range(6, len(x)) if x[i] not in ["GBytes", "MBytes", "KBytes", "Bytes"]]for x in file_content]
         file_content = [[y for y in x] for x in file_content if len(x) > 0]
         file_content = file_content[:opt.simulation_time]
-        print(file_content, " ", len(file_content))
+        # print(file_content, " ", len(file_content))
         return file_content
 
 
@@ -81,6 +86,9 @@ def parser_bit_rate_iperf(file_content, opt):
     title = 'Bit Rate vs Time at ' + opt.role + ' side '
 
     for x in file_content:
+        if x[1] == "bits/sec":
+            tmp += float(x[0]) / 10e6
+            bit_rate.append(float(x[0]) / 10e6)
         if x[1] == "Kbits/sec":
             tmp += float(x[0]) / 1000
             bit_rate.append(float(x[0]) / 1000)
@@ -92,7 +100,6 @@ def parser_bit_rate_iperf(file_content, opt):
             bit_rate.append(float(x[0]) * 1000)
 
     print("Bit Rate Average: ", tmp / opt.simulation_time)
-
     plotting(bit_rate, opt.simulation_time, labels, title)
 
 
@@ -139,7 +146,7 @@ def client_interface(ip_address):
 ap = argparse.ArgumentParser(description="a SCHC simulator.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 ap.add_argument("--role", action="store", dest="role", default="client", help="specify a role: client or server.")
 ap.add_argument("--tool", action="store", dest="tool", default="iperf", help="Traffic tool: iperf or udptetrys")
-ap.add_argument("--protocol", action="store", dest="protocol", default="udp", help="Protocol: udp or tcp")
+ap.add_argument("--protocol", action="store", dest="protocol", default="tcp", help="Protocol: udp or tcp")
 ap.add_argument("--delay", action="store", dest="delay_channel", type=int, default=100, help="Delay channel in ms.")
 ap.add_argument("--loss", action="store", dest="packet_loss_rate", type=int, default=3,
                 help="Packet loss rate in percentage.")
@@ -155,17 +162,23 @@ opt = ap.parse_args()
 # ------------------------------------------------------
 
 if opt.role == "client" and opt.tool == "iperf":
+    ## UDP
     # python3 ./parser.py --role client --tool iperf --protocol udp --delay 100 --loss 3 --ip 10.0.0.1 --rate 2 --time 60
+    ## TCP
+    # python3 ./parser.py --role client --tool iperf --delay 100 --loss 3 --ip 10.0.0.1 --rate 2 --time 60
     m = client_interface(opt.ip_address)
 
     shell_file = "./" + opt.tool + "_" + opt.role + ".sh -d " + str(opt.delay_channel) + " -l " + str(
         opt.packet_loss_rate) + " -a " + opt.ip_address + " -b " + str(opt.bit_rate) + " -t " + str(
-        opt.simulation_time) + " -m " + m
+        opt.simulation_time) + " -m " + m + " -p " + opt.protocol
     simulation(shell_file, opt)
 
 elif opt.role == "server" and opt.tool == "iperf":
-    # python3 ./parser.py --role server --tool iperf --time 60
-    shell_file = "./" + opt.tool + "_" + opt.role + ".sh -t" + str(opt.simulation_time + 10)
+    ## UDP
+    # python3 ./parser.py --role server --tool iperf  --protocol udp --time 60
+    ## TCP
+    # python3 ./parser.py --role server --tool iperf  --time 60
+    shell_file = "./" + opt.tool + "_" + opt.role + ".sh -t" + str(opt.simulation_time + 10) + " -p " + opt.protocol
     simulation(shell_file, opt)
 
 elif opt.role == "client" and opt.tool == "ping":
