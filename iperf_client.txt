@@ -1,22 +1,72 @@
 ------------------------------------------------------------
 Client connecting to 10.0.0.1, UDP port 5001
-Sending 1470 byte datagrams, IPG target: 2243.04 us (kalman adjust)
+Sending 1470 byte datagrams, IPG target: 5607.60 us (kalman adjust)
 UDP buffer size:  208 KByte (default)
 ------------------------------------------------------------
-[ 13] local 10.0.0.2 port 60432 connected with 10.0.0.1 port 5001
+[ 13] local 10.0.0.2 port 49720 connected with 10.0.0.1 port 5001
 [ ID] Interval       Transfer     Bandwidth
-[ 13]  0.0- 1.0 sec   642 KBytes  5.26 Mbits/sec
-[ 13]  1.0- 2.0 sec   640 KBytes  5.24 Mbits/sec
-[ 13]  2.0- 3.0 sec   640 KBytes  5.24 Mbits/sec
-[ 13]  3.0- 4.0 sec   640 KBytes  5.24 Mbits/sec
-[ 13]  4.0- 5.0 sec   640 KBytes  5.24 Mbits/sec
-[ 13]  5.0- 6.0 sec   639 KBytes  5.23 Mbits/sec
-[ 13]  6.0- 7.0 sec   640 KBytes  5.24 Mbits/sec
-[ 13]  7.0- 8.0 sec   640 KBytes  5.24 Mbits/sec
-[ 13]  8.0- 9.0 sec   640 KBytes  5.24 Mbits/sec
-[ 13]  9.0-10.0 sec   640 KBytes  5.24 Mbits/sec
-[ 13]  0.0-10.0 sec  6.25 MBytes  5.24 Mbits/sec
-[ 13] Sent 4460 datagrams
+[ 13]  0.0- 1.0 sec   258 KBytes  2.12 Mbits/sec
+[ 13]  1.0- 2.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13]  2.0- 3.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13]  3.0- 4.0 sec   257 KBytes  2.11 Mbits/sec
+[ 13]  4.0- 5.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13]  5.0- 6.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13]  6.0- 7.0 sec   257 KBytes  2.11 Mbits/sec
+[ 13]  7.0- 8.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13]  8.0- 9.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13]  9.0-10.0 sec   257 KBytes  2.11 Mbits/sec
+[ 13] 10.0-11.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 11.0-12.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 12.0-13.0 sec   257 KBytes  2.11 Mbits/sec
+[ 13] 13.0-14.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 14.0-15.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 15.0-16.0 sec   257 KBytes  2.11 Mbits/sec
+[ 13] 16.0-17.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 17.0-18.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 18.0-19.0 sec   257 KBytes  2.11 Mbits/sec
+[ 13] 19.0-20.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 20.0-21.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 21.0-22.0 sec   257 KBytes  2.11 Mbits/sec
+[ 13] 22.0-23.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 23.0-24.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 24.0-25.0 sec   257 KBytes  2.11 Mbits/sec
+[ 13] 25.0-26.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 26.0-27.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 27.0-28.0 sec   257 KBytes  2.11 Mbits/sec
+[ 13] 28.0-29.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 29.0-30.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 30.0-31.0 sec   257 KBytes  2.11 Mbits/sec
+[ 13] 31.0-32.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 32.0-33.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 33.0-34.0 sec   257 KBytes  2.11 Mbits/sec
+[ 13] 34.0-35.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 35.0-36.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 36.0-37.0 sec   257 KBytes  2.11 Mbits/sec
+[ 13] 37.0-38.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 38.0-39.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 39.0-40.0 sec   257 KBytes  2.11 Mbits/sec
+[ 13] 40.0-41.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 41.0-42.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 42.0-43.0 sec   257 KBytes  2.11 Mbits/sec
+[ 13] 43.0-44.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 44.0-45.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 45.0-46.0 sec   257 KBytes  2.11 Mbits/sec
+[ 13] 46.0-47.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 47.0-48.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 48.0-49.0 sec   257 KBytes  2.11 Mbits/sec
+[ 13] 49.0-50.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 50.0-51.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 51.0-52.0 sec   257 KBytes  2.11 Mbits/sec
+[ 13] 52.0-53.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 53.0-54.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 54.0-55.0 sec   257 KBytes  2.11 Mbits/sec
+[ 13] 55.0-56.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 56.0-57.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 57.0-58.0 sec   257 KBytes  2.11 Mbits/sec
+[ 13] 58.0-59.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13] 59.0-60.0 sec   256 KBytes  2.09 Mbits/sec
+[ 13]  0.0-60.0 sec  15.0 MBytes  2.10 Mbits/sec
+[ 13] Sent 10701 datagrams
 [ 13] Server Report:
-[ 13]  0.0-10.0 sec  5.67 MBytes  4.75 Mbits/sec   0.000 ms  417/ 4460 (0%)
-[ 13] 0.00-10.00 sec  2 datagrams received out-of-order
+[ 13]  0.0-60.0 sec  14.5 MBytes  2.03 Mbits/sec   0.000 ms  324/10701 (0%)
+[ 13] 0.00-60.00 sec  1 datagrams received out-of-order
