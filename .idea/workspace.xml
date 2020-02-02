@@ -5,9 +5,9 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/iperf_client.sh" beforeDir="false" afterPath="$PROJECT_DIR$/iperf_client.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/iperf_client.txt" beforeDir="false" afterPath="$PROJECT_DIR$/iperf_client.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/iperf_server.sh" beforeDir="false" afterPath="$PROJECT_DIR$/iperf_server.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/iperf_server.txt" beforeDir="false" afterPath="$PROJECT_DIR$/iperf_server.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/parser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.png" beforeDir="false" afterPath="$PROJECT_DIR$/test.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

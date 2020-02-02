@@ -1,25 +1,22 @@
 #!/bin/bash
 
-while getopts d:l:a:b:t:m: option; do
+while getopts d:l:a:m:c: option; do
 	case "${option}"
 	in
 	d) DELAY_CHANNEL_FORWARD=${OPTARG};;
 	l) PACKET_LOSS_RATE=${OPTARG};;
 	a) SERVER_ADDRESS=${OPTARG};;
-	b) BIT_RATE=${OPTARG};;
-  t) SIMULATION_TIME=${OPTARG};;
   m) TERIMAL=${OPTARG};;
+  c) COUNT=${OPTARG};;
 	esac
 done
 
 echo $DELAY_CHANNEL_FORWARD"ms"
 echo $PACKET_LOSS_RATE
 echo $SERVER_ADDRESS
-echo $BIT_RATE
-echo $SIMULATION_TIME
 echo $TERIMAL
+echo $COUNT
 
 tc qdisc add dev $TERIMAL root netem delay $DELAY_CHANNEL_FORWARD"ms" loss $PACKET_LOSS_RATE"%"
-#ping 10.0.0.1
-iperf -c $SERVER_ADDRESS -u -i 1 -t $SIMULATION_TIME -b $BIT_RATE"Mb" | tee iperf_client.txt
+ping -i 0.01 -c $COUNT $SERVER_ADDRESS | tee ping_client.txt
 tc qdisc delete dev $TERIMAL root netem
