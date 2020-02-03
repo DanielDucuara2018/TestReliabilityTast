@@ -1,0 +1,8 @@
+Connexion from 10.0.0.1:30002 requested
+Connexion established with 10.0.0.1:30002
+begintime: 1580699926
+
+secs    All MB/s        Mb/s        #pkt          PLR     #losses  #missing src    pkt size         CPU
+
+   1[1;31m        2.68[1;32m        2.34[0m         214[01;33m        0.00%[0m           0[1;36m             0[0m        1408        0.0%
+   2[1;31m       10.76[1;32m       10.07[0m         921[01;33m        2.33%[0m          22[1;36m             1[0m        1408        0.0%

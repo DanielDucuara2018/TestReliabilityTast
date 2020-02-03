@@ -31,14 +31,14 @@ def parse_ping(output_file):
 
 
 def parser_icmp_sequence_ping(file_content, opt):
-    sequence = np.zeros((opt.count_icmp_packets,), dtype=int)
+    sequence = np.ones((opt.count_icmp_packets,), dtype=int)
     labels = ['State', 'Sequence Number']
     title = 'Packet State at ' + opt.role + ' side '
 
     for x in file_content:
         sequence_number = int(x[4].split('=')[1]) - 1
         # print(sequence_number)
-        sequence[sequence_number] = 1
+        sequence[sequence_number] = 0
 
     plotting_stem(sequence, len(sequence), labels, title)
 
@@ -63,6 +63,23 @@ def parse_iperf(output_file, opt):
         file_content = file_content[:opt.simulation_time]
         # print(file_content, " ", len(file_content))
         return file_content
+
+def parse_udptetrys(output_file, opt):
+    with open(output_file) as f:
+        file_content = f.read()
+        print("Content")
+        file_content = file_content.split('\n')[1::]
+        file_content = list(map(lambda x: x.split(r' '), file_content))
+        file_content = [[y for y in x if y != ''] for x in file_content]
+        n = 0
+        file_content = [
+            [x[i] for i in range(0, len(x)) if x[i] not in ["out-of-order", "received"]] for x in file_content[n:] if len(x) == 11]
+        # file_content = [[x[i].split('\x')[0] for i in range(0, len(x)) if i in [0,1,2,3,4,7,9]]for x in file_content]
+        # file_content = [[y for y in x] for x in file_content if len(x) > 0]
+        # file_content = file_content[:opt.simulation_time]
+        
+        print(file_content, " ", len(file_content))
+        # return file_content
 
 
 def parser_error_iperf(file_content, opt):
@@ -104,7 +121,8 @@ def parser_bit_rate_iperf(file_content, opt):
 
 
 def plotting(y, x, labels, title):
-    t = np.arange(1.0, x + 1, 1)
+    t = np.arange(0.0, x + 1, 1)
+    y.insert(0,0.0)
 
     fig, ax = plt.subplots()
     ax.plot(t, y)
@@ -181,11 +199,27 @@ elif opt.role == "server" and opt.tool == "iperf":
     shell_file = "./" + opt.tool + "_" + opt.role + ".sh -t" + str(opt.simulation_time + 10) + " -p " + opt.protocol
     simulation(shell_file, opt)
 
-elif opt.role == "client" and opt.tool == "ping":
-    # python3 ./parser.py --role client --tool ping --delay 100 --loss 3 --ip 10.0.0.1 --rate 2 --count 1000
+elif opt.tool == "ping":
+    # python3 ./parser.py --tool ping --delay 100 --loss 3 --ip 10.0.0.1 --rate 2 --count 1000
     m = client_interface(opt.ip_address)
 
     shell_file = "./" + opt.tool + "_" + opt.role + ".sh -d" + str(opt.delay_channel) + " -l " + str(
         opt.packet_loss_rate) + " -a " + opt.ip_address + " -m " + m + " -c " + str(opt.count_icmp_packets)
     print(str(opt.count_icmp_packets))
     simulation(shell_file, opt)
+
+elif opt.role == "client" and opt.tool == "udptetrys":
+    # python3 ./parser.py --role client --tool udptetrys --delay 100 --loss 3 --ip 10.0.0.1 --rate 2 --time 60
+    m = client_interface(opt.ip_address)
+    delay_tetrys = 1400*8/(opt.bit_rate*1000)
+    os.system(f"tc qdisc add dev {m} root netem delay {opt.delay_channel}ms loss {opt.packet_loss_rate}%")
+    os.system(f"./udptetrys -c 10.0.0.2 -d {delay_tetrys} -b 1 -z 10 -k 5 -n 2000 | dd of=udptetrys_client.txt")
+    os.system("killall -9 udptetrys")
+    os.system(f"tc qdisc delete dev {m} root netem")   
+    print("Client.txt done!!!!")
+    parse_udptetrys("udptetrys_client.txt",opt)
+
+elif opt.role == "server" and opt.tool == "udptetrys":
+    # python3 ./parser.py --role server --tool udptetrys
+    print("udptetrys server")
+    os.system(f"./udptetrys -s | tee ./udptetrys_server.txt")

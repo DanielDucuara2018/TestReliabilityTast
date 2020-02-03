@@ -1,0 +1,12 @@
+Connexion request to 10.0.0.2:30001
+Connexion established with 10.0.0.2:30001
+Will send 2000 packets of 1400 bytes.
+A burst of 1 packet(s) is sent every 0.51 ms i.e. ~22.00 Mb/s.
+begintime: 1580701147
+
+secs    All Mb/s        Mb/s        #pkt      avg CR      max CR      min CR       #update    #sources in repair  #missing src         CPU
+
+   1[1;31m        7.07[1;32m        6.36[0m         578[01;33m       12.50[0m           0          16             4[1;36m                    10             0[0m        0.0%
+   2[1;31m        4.52[1;32m        4.31[0m         392[01;33m       24.40[0m          19          29             5[1;36m                    10             0[0m        0.0%
+   3[1;31m        6.69[1;32m        6.47[0m         588[01;33m       28.40[0m          27          30             5[1;36m                    10             1[0m        0.0%
+   3[1;31m         inf[1;32m         inf[0m         inf[01;33m       21.40[0m          19          24             5[1;36m                    10             0[0m        0.0%
