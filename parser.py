@@ -3,7 +3,7 @@ import argparse
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
-
+import re
 
 def simulation(shell_file, opt):
     os.system(shell_file)
@@ -71,9 +71,9 @@ def parse_udptetrys(output_file, opt):
         file_content = file_content.split('\n')[1::]
         file_content = list(map(lambda x: x.split(r' '), file_content))
         file_content = [[y for y in x if y != ''] for x in file_content]
-        n = 0
+        ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
         file_content = [
-            [x[i] for i in range(0, len(x)) if x[i] not in ["out-of-order", "received"]] for x in file_content[n:] if len(x) == 11]
+            [ansi_escape.sub('', x[i]) for i in range(0, len(x))] for x in file_content if len(x) == 11]
         # file_content = [[x[i].split('\x')[0] for i in range(0, len(x)) if i in [0,1,2,3,4,7,9]]for x in file_content]
         # file_content = [[y for y in x] for x in file_content if len(x) > 0]
         # file_content = file_content[:opt.simulation_time]
@@ -209,11 +209,11 @@ elif opt.tool == "ping":
     simulation(shell_file, opt)
 
 elif opt.role == "client" and opt.tool == "udptetrys":
-    # python3 ./parser.py --role client --tool udptetrys --delay 100 --loss 3 --ip 10.0.0.1 --rate 2 --time 60
+    # python3 ./parser.py --role client --tool udptetrys --delay 100 --loss 3 --ip 10.0.0.2 --rate 2 --time 60
     m = client_interface(opt.ip_address)
     delay_tetrys = 1400*8/(opt.bit_rate*1000)
     os.system(f"tc qdisc add dev {m} root netem delay {opt.delay_channel}ms loss {opt.packet_loss_rate}%")
-    os.system(f"./udptetrys -c 10.0.0.2 -d {delay_tetrys} -b 1 -z 10 -k 5 -n 2000 | dd of=udptetrys_client.txt")
+    os.system(f"./udptetrys -c {opt.ip_address} -d {delay_tetrys} -b 1 -z 10 -k 5 -n 2000 | tee ./udptetrys_client.txt")
     os.system("killall -9 udptetrys")
     os.system(f"tc qdisc delete dev {m} root netem")   
     print("Client.txt done!!!!")
