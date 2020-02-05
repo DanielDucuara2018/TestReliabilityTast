@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import re
 
+
 def simulation(shell_file, opt):
     os.system(shell_file)
     output_file = opt.tool + "_" + opt.role + ".txt"
@@ -58,28 +59,12 @@ def parse_iperf(output_file, opt):
         file_content = [
             [x[i] for i in range(0, len(x)) if x[i] not in ["out-of-order", "received"]] for x in
             file_content[n:] if len(x) >= 8]
-        file_content = [[x[i] for i in range(6, len(x)) if x[i] not in ["GBytes", "MBytes", "KBytes", "Bytes"]]for x in file_content]
+        file_content = [[x[i] for i in range(6, len(x)) if x[i] not in ["GBytes", "MBytes", "KBytes", "Bytes"]] for x in
+                        file_content]
         file_content = [[y for y in x] for x in file_content if len(x) > 0]
         file_content = file_content[:opt.simulation_time]
         # print(file_content, " ", len(file_content))
         return file_content
-
-def parse_udptetrys(output_file, opt):
-    with open(output_file) as f:
-        file_content = f.read()
-        print("Content")
-        file_content = file_content.split('\n')[1::]
-        file_content = list(map(lambda x: x.split(r' '), file_content))
-        file_content = [[y for y in x if y != ''] for x in file_content]
-        ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
-        file_content = [
-            [ansi_escape.sub('', x[i]) for i in range(0, len(x))] for x in file_content if len(x) == 11]
-        # file_content = [[x[i].split('\x')[0] for i in range(0, len(x)) if i in [0,1,2,3,4,7,9]]for x in file_content]
-        # file_content = [[y for y in x] for x in file_content if len(x) > 0]
-        # file_content = file_content[:opt.simulation_time]
-        
-        print(file_content, " ", len(file_content))
-        # return file_content
 
 
 def parser_error_iperf(file_content, opt):
@@ -89,8 +74,9 @@ def parser_error_iperf(file_content, opt):
     title = 'Error Rate vs Time at ' + opt.role + ' side '
 
     for x in file_content:
-        tmp += float(x[4].split('/')[0]) / float(x[5])
-        error.append(float(x[4].split('/')[0]) / float(x[5]))
+        e = (float(x[4].split('/')[0]) / float(x[5])) * 100
+        tmp += e
+        error.append(e)
 
     print("Error Average: ", tmp / opt.simulation_time)
     plotting(error, opt.simulation_time, labels, title)
@@ -120,9 +106,78 @@ def parser_bit_rate_iperf(file_content, opt):
     plotting(bit_rate, opt.simulation_time, labels, title)
 
 
+def parse_udptetrys(output_file, opt):
+    with open(output_file) as f:
+        file_content = f.read()
+        print("Content")
+        file_content = file_content.split('\n')[1::]
+        file_content = list(map(lambda x: x.split(r' '), file_content))
+        file_content = [[y for y in x if y != ''] for x in file_content]
+
+        if opt.role == 'client':
+            n = 11
+        elif opt.role == 'server':
+            n = 9
+
+        ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+        file_content = [
+            [ansi_escape.sub('', x[i]) for i in range(0, len(x))] for x in file_content if len(x) == n]
+
+        print(file_content, " ", len(file_content))
+        return file_content
+
+
+def parser_bit_rate_udptetrys(file_content, opt):
+    bit_rate = []
+    tmp = 0
+    labels = ['Time (s)', 'Bit Rate (Mbits/s)']
+    title = 'Bit Rate vs Time at ' + opt.role + ' side '
+
+    for x in file_content:
+        if x[1] != "inf":
+            tmp += float(x[1])
+            bit_rate.append(float(x[1]))
+
+    print("Bit Rate Average: ", tmp / len(bit_rate))
+    plotting(bit_rate, len(bit_rate), labels, title)
+
+
+def parser_error_udptetrys(file_content, opt):
+    error = []
+    tmp = 0
+    labels = ['Time (s)', 'Error Rate (%)']
+    title = 'Error Rate vs Time at ' + opt.role + ' side '
+
+    for x in file_content:
+        tmp += float(x[4].split('%')[0])
+        error.append(float(x[4].split('%')[0]))
+
+    print("Error Average: ", tmp / len(error))
+    plotting(error, len(error), labels, title)
+
+
+def parser_missing_udptetrys(file_content, opt):
+    missing = []
+    tmp = 0
+    labels = ['Time (s)', 'Missing Packets']
+    title = 'Missing Packets vs Time at ' + opt.role + ' side '
+
+    if opt.role == "server":
+        n = 6
+    elif opt.role == "client":
+        n = 9
+
+    for x in file_content:
+        tmp += float(x[n])
+        missing.append(float(x[n]))
+
+    print("Missing Average: ", tmp / len(missing))
+    plotting_stem(missing, len(missing), labels, title)
+
+
 def plotting(y, x, labels, title):
     t = np.arange(0.0, x + 1, 1)
-    y.insert(0,0.0)
+    y.insert(0, 0.0)
 
     fig, ax = plt.subplots()
     ax.plot(t, y)
@@ -211,15 +266,24 @@ elif opt.tool == "ping":
 elif opt.role == "client" and opt.tool == "udptetrys":
     # python3 ./parser.py --role client --tool udptetrys --delay 100 --loss 3 --ip 10.0.0.2 --rate 2 --time 60
     m = client_interface(opt.ip_address)
-    delay_tetrys = 1400*8/(opt.bit_rate*1000)
+    delay_tetrys = 1400 * 8 / (opt.bit_rate * 1000)
+    number_of_packets = opt.bit_rate * 1e6 * opt.simulation_time / 11200  # 8 bits/byte * 1400 bytes/packet
     os.system(f"tc qdisc add dev {m} root netem delay {opt.delay_channel}ms loss {opt.packet_loss_rate}%")
-    os.system(f"./udptetrys -c {opt.ip_address} -d {delay_tetrys} -b 1 -z 10 -k 5 -n 2000 | tee ./udptetrys_client.txt")
+    os.system(
+        f"./udptetrys -c {opt.ip_address} -d {delay_tetrys} -b 1 -z 10 -k 5 -n {number_of_packets} | tee ./udptetrys_client.txt")
     os.system("killall -9 udptetrys")
-    os.system(f"tc qdisc delete dev {m} root netem")   
+    os.system(f"tc qdisc delete dev {m} root netem")
     print("Client.txt done!!!!")
-    parse_udptetrys("udptetrys_client.txt",opt)
+    file_content = parse_udptetrys("udptetrys_client.txt", opt)
+    parser_bit_rate_udptetrys(file_content, opt)
+    parser_missing_udptetrys(file_content, opt)
 
 elif opt.role == "server" and opt.tool == "udptetrys":
     # python3 ./parser.py --role server --tool udptetrys
     print("udptetrys server")
     os.system(f"./udptetrys -s | tee ./udptetrys_server.txt")
+    file_content = parse_udptetrys("udptetrys_server.txt", opt)
+    parser_bit_rate_udptetrys(file_content, opt)
+    parser_missing_udptetrys(file_content, opt)
+    parser_error_udptetrys(file_content, opt)
+
